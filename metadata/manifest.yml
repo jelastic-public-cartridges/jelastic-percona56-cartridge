@@ -1,0 +1,60 @@
+---
+Name: perconadb
+Cartridge-Short-Name: PERCONADB
+Architecture: noarch
+Display-Name: PerconaDB 5.6
+Description: PerconaDB is a multi-user, multi-threaded SQL database server.
+Version: '5.6'
+Versions:
+- '5.5'
+Cartridge-Version: 0.1
+Cartridge-Vendor: developercorey
+License: GPL
+Vendor: PerconaDB Foundation
+Source-Url: https://github.com/jelastic-public-cartridges/jelastic-percona56-cartridge.git
+Categories:
+- service
+- database
+- embedded
+Website: https://www.percona.com/
+Help-Topics:
+  Building with PerconaDB: https://www.percona.com/forums/
+Cart-Data:
+- Key: username
+  Type: cart_data
+  Description: Root user on perconadb database
+- Key: password
+  Type: cart_data
+  Description: Password for root user on perconadb database
+- Key: database_name
+  Type: cart_data
+  Description: PerconaDB database name
+- Key: connection_url
+  Type: cart_data
+  Description: PerconaDB connection URL
+Suggests:
+- phpmyadmin-4
+Provides:
+- perconadb-5.6
+- perconadb
+- perconadb-singleton-master
+Publishes:
+  publish-db-connection-info:
+    Type: ENV:NET_TCP:db:connection-info
+Scaling:
+  Min: 1
+  Max: 1
+Endpoints:
+- Private-IP-Name: DB_HOST
+  Private-Port-Name: DB_PORT
+  Private-Port: 3306
+  Public-Port-Name: DB_PROXY_PORT
+  Protocols:
+- Private-IP-Name: APP_HOST
+  Private-Port-Name: APP_PORT
+  Private-Port: 80
+  Public-Port-Name: APP_PROXY_PORT
+  Protocols:
+  - mysql
+Install-Build-Required: false
+Compatible-Versions: []

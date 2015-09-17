@@ -1,0 +1,35 @@
+#!/bin/bash -e
+rpm --quiet -q percona-release && exit 0
+[ -f /etc/os-release ] && source /etc/os-release
+
+yum install -q -y https://www.percona.com/redir/downloads/percona-release/redhat/0.1-3/percona-release-0.1-3.noarch.rpm  >/dev/null 2>/dev/null 
+if [[ "x$CENTOS_MANTISBT_PROJECT" == "xCentOS-7" ]] ; then
+    yum install -q -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+else
+    yum install -q -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
+fi
+yum install -q -y Percona-XtraDB-Cluster-server-56.x86_64 2>/dev/null
+
+hash systemctl 2>/dev/null && {
+    systemctl disable mysqld.service 2>/dev/nul ;
+    systemctl enable httpd 2>/dev/null ;
+} || {
+    chkconfig --level 3 mysql off  2>/dev/null ;
+    chkconfig --level 3 httpd on 2>/dev/null ;
+}
+
+uid=$(id mysql -u 2>/dev/null) && \
+gid=$(id mysql -g 2>/dev/null) && \
+juid=$(id jelastic -u 2>/dev/null) && \
+jgid=$(id jelastic -g 2>/dev/null) && \
+{ sed -i -re "s/mysql\:x\:[0-9]*/mysql:x:$jgid/" /etc/group ; sed -i -re "s/mysql\:x\:[0-9]*\:[0-9]*/mysql:x:$juid:$jgid/" /etc/passwd ; }
+
+rm -rf /var/lib/mysql/*
+chown $juid:$jgid /var/lib/mysql
+
+mkdir -p $OPENSHIFT_PERCONADB_DIR/{log,pid,socket,data,run}
+ln -s  $OPENSHIFT_PERCONADB_DIR/log $OPENSHIFT_PERCONADB_DIR/logs
+
+mkdir -p $OPENSHIFT_PERCONADB_DIR/versions/$2/conf
+mv $OPENSHIFT_PERCONADB_DIR/conf/my.cnf  $J_OPENSHIFT_APPHOME_DIR/conf/my.cnf
+

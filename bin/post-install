@@ -1,0 +1,30 @@
+#!/bin/bash -e
+
+[ -f /etc/jelastic/environment ] && . /etc/jelastic/environment
+source $OPENSHIFT_CARTRIDGE_SDK_BASH
+
+[ -z "$J_OPENSHIFT_APPHOME_DIR" ] && J_OPENSHIFT_APPHOME_DIR="/opt/repo/versions/5.6/"
+
+rm -f /etc/phpMyAdmin/config.inc.php 
+ln -sf ${J_OPENSHIFT_APPHOME_DIR}/conf/config.inc.php  /etc/phpMyAdmin/config.inc.php
+
+httpVersion=$(httpd -v | grep version | sed -e 's/[A-Za-z():\/\ ]//g' -re 's/([0-9]).([0-9])\..*/\1\2/')
+
+[ -f /etc/httpd/conf.d/phpMyAdmin.conf ] && {
+    rm -f /etc/httpd/conf.d/phpMyAdmin.conf ;
+    ln -sf ${J_OPENSHIFT_APPHOME_DIR}/conf/phpMyAdmin-jel.conf  /etc/httpd/conf.d/phpMyAdmin.conf ;
+}
+
+if [[ $httpVersion -le 24 ]] ; then
+    sed -i '/DocumentRoot/d' /etc/httpd/conf/httpd.conf
+fi
+hash systemctl 2>/dev/null && { systemctl restart httpd 2>/dev/null ;  } || { service httpd restart 2>/dev/null; }
+
+
+[ -f /opt/repo/conf//Config.class.php ]  && mv /opt/repo/conf//Config.class.php /usr/share/phpMyAdmin/libraries
+
+[ -f "$OPENSHIFT_PERCONADB_DIR/conf/my.cnf" ] &&   mv $OPENSHIFT_PERCONADB_DIR/conf/my.cnf $J_OPENSHIFT_APPHOME_DIR/conf/my.cnf
+chown mysql:mysql -fR /opt/repo/
+
+/bin/bash /opt/repo/jelastic/scripts/firewall.sh >/dev/null 2>/dev/null
+service iptables save >/dev/null 2>/dev/null

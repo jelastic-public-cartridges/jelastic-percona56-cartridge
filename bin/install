@@ -1,0 +1,26 @@
+#!/bin/bash -e
+
+source $OPENSHIFT_CARTRIDGE_SDK_BASH
+
+# Generate username, password, and db name and create env variables
+
+username="root"
+password="tmppassword"
+
+echo "$username" > $OPENSHIFT_PERCONADB_DIR/env/OPENSHIFT_PERCONADB_DB_USERNAME
+echo "$password" > $OPENSHIFT_PERCONADB_DIR/env/OPENSHIFT_PERCONADB_DB_PASSWORD
+echo "mysql://$username:$password@$OPENSHIFT_PERCONADB_DB_HOST:$OPENSHIFT_PERCONADB_DB_PORT/" > $OPENSHIFT_PERCONADB_DIR/env/OPENSHIFT_PERCONADB_DB_URL
+
+#backward comat to mysql
+echo "$username" > $OPENSHIFT_PERCONADB_DIR/env/OPENSHIFT_MYSQL_DB_USERNAME
+echo "$password" > $OPENSHIFT_PERCONADB_DIR/env/OPENSHIFT_MYSQL_DB_PASSWORD
+echo "mysql://$username:$password@$OPENSHIFT_PERCONADB_DB_HOST:$OPENSHIFT_PERCONADB_DB_PORT/" > $OPENSHIFT_PERCONADB_DIR/env/OPENSHIFT_MYSQL_DB_URL
+
+#echo 'Installing perconadb'
+
+# Must be invoked with absolute path to avoid a perconadb bug involving my_print_defaults
+#/usr/bin/mysql_install_db --datadir=$OPENSHIFT_PERCONADB_DIR/data || error 'Failed to create perconadb', 119
+[ -f /opt/repo/jelastic/mysql.tar.gz ] && {
+    tar -xf /opt/repo/jelastic/mysql.tar.gz -C $OPENSHIFT_PERCONADB_DIR
+    rm -f  /opt/repo/jelastic/mysql.tar.gz
+}
