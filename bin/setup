@@ -8,6 +8,8 @@ if [[ "x$CENTOS_MANTISBT_PROJECT" == "xCentOS-7" ]] ; then
 else
     yum install -q -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
 fi
+
+rpm -e --nodeps MariaDB-shared MariaDB-common 2>/dev/null 1>/dev/null
 yum install -q -y Percona-XtraDB-Cluster-server-56.x86_64 2>/dev/null
 
 hash systemctl 2>/dev/null && {
