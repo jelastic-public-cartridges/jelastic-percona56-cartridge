@@ -13,6 +13,8 @@ fi
 [ -n "$(rpm -qa|grep MariaDB-common)" ] && rpm -e --nodeps MariaDB-common 2>/dev/null 1>/dev/null
 yum install -q -y Percona-XtraDB-Cluster-server-56.x86_64 2>/dev/null
 
+sed -i 's/upload_max_filesize.*$/upload_max_filesize = 1024M/' /etc/php.ini
+
 hash systemctl 2>/dev/null && {
     systemctl disable mysqld.service 2>/dev/nul ;
     systemctl enable httpd 2>/dev/null ;
