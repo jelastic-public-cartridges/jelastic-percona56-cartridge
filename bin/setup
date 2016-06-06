@@ -1,4 +1,7 @@
 #!/bin/bash -e
+
+./etc/jelastic/environment
+
 rpm --quiet -q percona-release && exit 0
 [ -f /etc/os-release ] && source /etc/os-release
 
@@ -14,6 +17,7 @@ fi
 yum install -q -y Percona-XtraDB-Cluster-server-56.x86_64 2>/dev/null
 
 sed -i 's/upload_max_filesize.*$/upload_max_filesize = 1024M/' /etc/php.ini; chmod 666 /etc/php.ini;
+ln -sfT /etc/php.ini /opt/repo/versions/${Version}/conf/php.ini;
 
 hash systemctl 2>/dev/null && {
     systemctl disable mysqld.service 2>/dev/nul ;
