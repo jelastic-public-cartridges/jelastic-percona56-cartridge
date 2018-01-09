@@ -1,5 +1,6 @@
 #!/bin/bash 
 source /etc/jelastic/environment
+[ ! -f "${J_OPENSHIFT_APPHOME_DIR}/conf/my.cnf" ] && erb ${CARTRIDGE_HOME}/conf/my.cnf.erb > $J_OPENSHIFT_APPHOME_DIR/conf/my.cnf
 SED=$(which sed);
 
 CHKCONFIG=$(which chkconfig)
