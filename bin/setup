@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+. /etc/jelastic/environment
+
 rpm --quiet -q percona-release && exit 0
 [ -f /etc/os-release ] && source /etc/os-release
 
