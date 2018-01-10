@@ -30,10 +30,11 @@ function is_running {
 # TODO: source user hooks?
 # Start mysqld and block until it comes up.
 function start {
+  service httpd start &>/dev/null;
   if ! is_running; then
     echo "Starting MySQL cartridge"
 #    erb conf/my.cnf.erb.hidden > conf/my.cnf
-    /usr/bin/mysqld_safe --defaults-file=$J_OPENSHIFT_APPHOME_DIR/conf/my.cnf > /dev/null 2>&1 &
+    /usr/bin/mysqld_safe --defaults-file=$J_OPENSHIFT_APPHOME_DIR/conf/my.cnf --bind-address=:: > /dev/null 2>&1 &
     wait_for_mysqld_availability
   else
     echo "MySQL already running" 1>&2
@@ -59,6 +60,7 @@ function wait_for_mysqld_availability {
 }
 
 function stop {
+  service httpd stop &>/dev/null;
   if is_running; then
     pidfile=$OPENSHIFT_PERCONADB_DIR/pid/perconadb.pid
 
