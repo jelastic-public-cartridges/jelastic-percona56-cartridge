@@ -100,8 +100,8 @@ $cfg['Servers'][$i]['bs_temp_log_threshold']        // Blobstreaming: Recommente
 /*
  * Directories for saving/loading files from server
  */
-$cfg['UploadDir'] = '/var/lib/jelastic/phpMyAdmin/upload';
-$cfg['SaveDir']   = '/var/lib/jelastic/phpMyAdmin/save';
+$cfg['UploadDir'] = '/opt/repo/upload';
+$cfg['SaveDir']   = '/opt/repo/save';
 $cfg['ExecTimeLimit'] = 1200;
 
 /*
