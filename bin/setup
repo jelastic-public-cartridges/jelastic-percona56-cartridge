@@ -21,6 +21,9 @@ ln -sfT /etc/php.ini /opt/repo/versions/5.6/conf/php.ini;
 
 sed -i 's/Listen.*/Listen [::]:80/' /etc/httpd/conf/httpd.conf
 
+mkdir -p $OPENSHIFT_PERCONADB_DIR/save $OPENSHIFT_PERCONADB_DIR/upload
+chmod 777 $OPENSHIFT_PERCONADB_DIR/save $OPENSHIFT_PERCONADB_DIR/upload
+
 hash systemctl 2>/dev/null && {
     systemctl disable mysqld.service 2>/dev/nul ;
     systemctl enable httpd 2>/dev/null ;
@@ -43,6 +46,3 @@ ln -s  $OPENSHIFT_PERCONADB_DIR/log $OPENSHIFT_PERCONADB_DIR/logs
 
 mkdir -p $OPENSHIFT_PERCONADB_DIR/versions/$2/conf
 mv $OPENSHIFT_PERCONADB_DIR/conf/my.cnf  $J_OPENSHIFT_APPHOME_DIR/conf/my.cnf
-
-mkdir -p $OPENSHIFT_PERCONADB_DIR/save $OPENSHIFT_PERCONADB_DIR/upload
-chmod 777 $OPENSHIFT_PERCONADB_DIR/save $OPENSHIFT_PERCONADB_DIR/upload
