@@ -54,6 +54,10 @@ Endpoints:
   Private-Port-Name: APP_PORT
   Private-Port: 80
   Public-Port-Name: APP_PROXY_PORT
+- Private-IP-Name: EXIM_IP
+  Private-Port-Name: EXIM_PORT
+  Private-Port: 7979
+  Public-Port-Name: EXIM_PROXY_PORT
   Protocols:
   - mysql
 Install-Build-Required: false
