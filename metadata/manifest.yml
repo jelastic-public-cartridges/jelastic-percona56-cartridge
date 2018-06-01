@@ -2,7 +2,7 @@
 Name: perconadb
 Cartridge-Short-Name: PERCONADB
 Architecture: noarch
-Display-Name: PerconaDB 5.6
+Display-Name: Percona 5.6
 Description: PerconaDB is a multi-user, multi-threaded SQL database server.
 Version: '5.6'
 Versions:
