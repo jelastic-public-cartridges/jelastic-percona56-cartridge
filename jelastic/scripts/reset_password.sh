@@ -69,8 +69,8 @@ function _setPassword() {
                 sed -i '/\[mysqld\]/askip-grant-tables' $J_OPENSHIFT_APPHOME_DIR/conf/my.cnf
                 $SERVICE_CMD ${SERVICE_NAME} start >> $LOG_FILE 2>&1
                 sleep 5;
-        	$MYSQL $db -h 127.0.0.1 --execute="UPDATE user SET Password=PASSWORD('${J_OPENSHIFT_APP_ADM_PASSWORD}') WHERE user='${Admin_App_User}';"
-                $MYSQL $db -h 127.0.0.1 --execute="DELETE FROM user WHERE user = '';"
+        	$MYSQL $db -h 127.0.0.1 --execute="UPDATE mysql.user SET Password=PASSWORD('${J_OPENSHIFT_APP_ADM_PASSWORD}') WHERE user='${Admin_App_User}';"
+                $MYSQL $db -h 127.0.0.1 --execute="DELETE FROM mysql.user WHERE user = '';"
                 $MYSQL $db -h 127.0.0.1 --execute="FLUSH PRIVILEGES;"
 
                 sleep 2
